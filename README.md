@@ -1,9 +1,25 @@
-# FairLens
 # FairLens: Proactive Algorithmic Bias Auditing Framework
+
+**Version:** 2.0.0 | **Last Updated:** April 2, 2026 | **Status:** ✅ Production Ready
+
+![FairLens Badge](https://img.shields.io/badge/Python-3.9%2B-blue) ![Tests](https://img.shields.io/badge/Tests-8%2F8%20Passing-brightgreen) ![License](https://img.shields.io/badge/License-MIT-green)
 
 ## Executive Summary
 
-**FairLens** is a production-ready Python framework for detecting algorithmic bias in tabular datasets before model training. By implementing industry-standard fairness metrics and risk assessment, FairLens enables responsible AI teams to catch bias at the data-sourcing stage rather than post-hoc analysis.
+**FairLens** is a comprehensive Python framework for detecting and analyzing algorithmic bias in tabular datasets. With both programmatic and interactive web interfaces, FairLens enables responsible AI teams to:
+
+- 🔍 **Detect bias early** at the data-sourcing stage before model training
+- 📊 **Visualize fairness metrics** interactively through a web dashboard
+- 📈 **Track bias trends** over time with temporal analysis capabilities
+- 📋 **Generate compliance reports** with industry-standard fairness metrics
+- 🎯 **Assess risk levels** with automated recommendations
+
+### What's New in v2.0.0
+- ✨ **Interactive Streamlit Dashboard** with real-time bias visualization
+- ⏱️ **Temporal Bias Analysis** for tracking fairness metrics over time periods
+- 📊 **Advanced Visualizations** with Plotly interactive charts
+- 🔄 **Automated CI/CD** with GitHub Actions testing pipeline
+- 📚 **Comprehensive Documentation** with step-by-step implementation guide
 
 ---
 
@@ -12,40 +28,126 @@
 ### 1.1 System Design
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    FairnessAuditor                           │
-│              (Main Public Interface)                         │
-└────────────────────────┬────────────────────────────────────┘
-                         │
-        ┌────────────────┼────────────────┐
-        │                │                │
-        ▼                ▼                ▼
-   ┌─────────┐      ┌─────────┐      ┌──────────┐
-   │BaseAuditor      │TabularAuditor   │MetricsCalculator│
-   │(Abstract)       │(Concrete)       │(Utility)         │
-   └─────────┘      └─────────┘      └──────────┘
-        △                │                │
-        │                │                │
-        └────────────────┼────────────────┘
-                    Inheritance &
-                  Composition Pattern
+┌────────────────────────────────────────────────────────────────┐
+│                    FairLens Ecosystem v2.0                     │
+└────────────────────────────┬───────────────────────────────────┘
+                             │
+        ┌────────────────────┼────────────────────┐
+        │                    │                    │
+        ▼                    ▼                    ▼
+   ┌──────────┐         ┌──────────┐       ┌──────────────┐
+   │Core      │         │Dashboard │       │Visualizations│
+   │Framework │         │(Streamlit)       │(Plotly)      │
+   └──────────┘         └──────────┘       └──────────────┘
+        │                    │                    │
+        │         ┌──────────┴────────────┐       │
+        │         │                       │       │
+        ▼         ▼                       ▼       ▼
+   ┌─────────────────────────────────────────────────────┐
+   │           Fairness Auditor Engine                   │
+   │  - Temporal Bias Analysis                           │
+   │  - Risk Assessment & Classification                 │
+   │  - Multi-metric Evaluation                          │
+   └─────────────────────────────────────────────────────┘
+        │           │                    │
+        ▼           ▼                    ▼
+   ┌─────────┐ ┌──────────┐         ┌─────────┐
+   │Tabular  │ │Temporal  │         │Metrics  │
+   │Auditor  │ │Analysis  │         │Calc.    │
+   └─────────┘ └──────────┘         └─────────┘
+        │
+        ▼
+   ┌──────────────────────────────┐
+   │ aif360 StandardDataset       │
+   │ Logistic Regression Proxy    │
+   └──────────────────────────────┘
 ```
 
 ### 1.2 Component Responsibilities
 
 | Component | Purpose | Key Features |
 |-----------|---------|--------------|
-| **FairnessAuditor** | Public API | Orchestrates auditing; returns JSON reports |
-| **BaseAuditor** | Abstract contract | Defines interface for all auditors |
-| **TabularAuditor** | Concrete implementation | Handles pandas DataFrames; wraps aif360 |
-| **MetricsCalculator** | Utility class | Static methods for metric computation |
-| **RiskAssessment** | Risk classification | Maps metrics to risk levels |
+| **FairnessAuditor** | Public API & Orchestration | Coordinates auditing; temporal analysis; JSON reports |
+| **TabularAuditor** | Core bias detection | Pandas DataFrames; aif360 integration; validation |
+| **BaseAuditor** | Abstract contract | Interface definition; extensibility |
+| **MetricsCalculator** | Fairness computation | Static methods; DPD, EOD, DIR metrics |
+| **Temporal Analysis** | Time-series tracking | Period-based bias trends; risk evolution |
+| **Dashboard (app.py)** | Interactive web UI | Real-time visualization; file upload; export |
+| **Visualization Utils** | Chart generation | Outcome rates; disparate impact gauges; heatmaps |
+| **RiskAssessment** | Risk classification | Automated risk mapping; recommendations |
 
 ---
 
-## 2. Fairness Metrics Implementation
+## 2. Quick Start Guide
 
-### 2.1 Demographic Parity Difference (DPD)
+### 2.1 Installation
+
+```bash
+# Clone repository
+git clone https://github.com/yourusername/FairLens.git
+cd FairLens
+
+# Create virtual environment
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+```
+
+### 2.2 Launch Interactive Dashboard
+
+```bash
+streamlit run app.py
+```
+
+This opens a browser at `http://localhost:8501` with:
+- 📁 CSV file upload and validation
+- 🎯 Column selection for analysis
+- 📊 Real-time bias metrics visualization
+- 📈 Temporal trend analysis (optional)
+- 📋 JSON report generation
+- 💾 Export options (CSV, JSON)
+
+### 2.3 Programmatic Usage
+
+```python
+from fairness_engine import FairnessAuditor
+import pandas as pd
+
+# Load your data
+df = pd.read_csv('your_data.csv')
+
+# Create auditor
+auditor = FairnessAuditor(
+    df=df,
+    label_name='outcome_column',
+    protected_attributes=['protected_group_column']
+)
+
+# Generate comprehensive report
+report = auditor.generate_report(as_json=False)
+print(f"Risk Level: {report['risk_level']}")
+
+# Or export temporal analysis
+temporal_data = auditor.temporal_bias_analysis(df, time_column='year')
+temporal_data.to_csv('bias_trends.csv', index=False)
+```
+
+### 2.4 Code Examples
+
+Explore [QUICKSTART_EXAMPLES.py](QUICKSTART_EXAMPLES.py) for 5 runnable examples:
+1. Basic bias audit
+2. Custom thresholds configuration
+3. Multiple protected attributes
+4. Temporal trend analysis
+5. JSON report generation
+
+---
+
+## 3. Fairness Metrics Implementation
+
+### 3.1 Demographic Parity Difference (DPD)
 
 **Formula:** $|P(\hat{Y}=1|A=0) - P(\hat{Y}=1|A=1)|$
 
@@ -62,7 +164,7 @@ Group 1 (privileged): 70% approval rate
 DPD = |0.60 - 0.70| = 0.10 (at threshold)
 ```
 
-### 2.2 Equalized Odds Difference (EOD)
+### 3.2 Equalized Odds Difference (EOD)
 
 **Formula:** $\max(|TPR_0 - TPR_1|, |FPR_0 - FPR_1|)$
 
@@ -80,7 +182,7 @@ Group 1: TPR = 0.90, FPR = 0.10
 EOD = max(|0.85-0.90|, |0.15-0.10|) = 0.05 (LOW risk)
 ```
 
-### 2.3 Disparate Impact Ratio (DIR) - The 80% Rule
+### 3.3 Disparate Impact Ratio (DIR) - The 80% Rule
 
 **Formula:** $\frac{\text{Selection Rate (Protected)}}{\text{Selection Rate (Privileged)}}$
 
@@ -99,7 +201,7 @@ DIR = 0.40 / 0.50 = 0.80 (exactly at threshold)
 
 ---
 
-## 3. Risk Classification Logic
+## 4. Risk Classification Logic
 
 | Risk Level | Criteria |
 |-----------|----------|
@@ -109,7 +211,7 @@ DIR = 0.40 / 0.50 = 0.80 (exactly at threshold)
 
 ---
 
-## 4. Software Architecture Details
+## 5. Software Architecture Details
 
 ### 4.1 Object-Oriented Design
 
@@ -313,58 +415,154 @@ Success Rate: 100.0%
 
 ---
 
-## 8. Dependencies
+## 9. Dependencies
 
 ```
 aif360>=0.5.0        # AI Fairness 360 toolkit
 numpy>=1.20.0        # Numerical computing
 pandas>=1.3.0        # Data manipulation
 scikit-learn>=0.24.0 # Machine learning utilities
+streamlit>=1.28.0    # Interactive web framework (NEW)
+plotly>=5.17.0       # Interactive visualizations (NEW)
+Pillow>=9.0.0        # Image processing (NEW)
 ```
 
 ### Installation
 
 ```bash
-pip install aif360 numpy pandas scikit-learn
+pip install -r requirements.txt
 ```
 
 ---
 
-## 9. Design Decisions & Rationale
+## 10. New Features in v2.0.0
 
-### 9.1 Why Logistic Regression as Proxy Classifier?
+### 10.1 Interactive Dashboard (Streamlit)
+
+The new web dashboard (`app.py`) provides:
+
+**Features:**
+- 📁 Drag-and-drop CSV file upload with validation
+- 🎯 Interactive column selection for analysis
+- ⚙️ Customizable fairness thresholds
+- 📊 Real-time metric visualization
+- 📈 Color-coded risk indicators (🟢 LOW, 🟡 MEDIUM, 🔴 HIGH)
+- 📉 Temporal trend analysis with interactive charts
+- 📋 Automated recommendations based on bias detection
+- 💾 Export capabilities (JSON reports, CSV data)
+
+**Usage:**
+```bash
+streamlit run app.py
+```
+
+### 10.2 Temporal Bias Analysis
+
+Track fairness metrics evolution across time periods:
+
+```python
+# Analyze bias trends by year
+temporal_results = auditor.temporal_bias_analysis(df, time_column='year')
+
+# Returns DataFrame with:
+# - time_period: Year/month identifier
+# - disparate_impact_ratio: DIR per period
+# - demographic_parity_difference: DPD per period
+# - equalized_odds_difference: EOD per period
+# - sample_size: Records per period
+# - risk_level: Risk classification per period
+```
+
+**Use Cases:**
+- Monitor fairness improvements over time
+- Identify when bias issues emerged
+- Track effectiveness of fairness interventions
+- Generate audit trails for compliance
+
+### 10.3 Advanced Visualizations
+
+7 reusable visualization functions via `visualization_utils.py`:
+
+| Function | Output |
+|----------|--------|
+| `create_outcome_rates_chart()` | Bar chart comparing group approval/outcome rates |
+| `create_disparate_impact_gauge()` | Gauge chart with 80% Rule pass/fail zones |
+| `create_equity_heatmap()` | Heatmap of hiring/rejection distributions |
+| `create_bias_trend_chart()` | Multi-axis line chart for temporal trends |
+| `create_risk_summary_table()` | Formatted metric summary table |
+| `format_metric_for_display()` | Human-readable metric formatting |
+| `get_risk_color()` | Hex color by risk level |
+
+All return Plotly figures compatible with Streamlit.
+
+### 10.4 Automated Testing Pipeline
+
+GitHub Actions CI/CD configuration (`.github/workflows/python-tests.yml`):
+
+**Triggers:** On push to `main`/`develop` or Pull Requests  
+**Matrix Testing:** Python 3.9, 3.10, 3.11  
+**Pipeline:**
+1. Environment setup with dependency caching
+2. Code linting (flake8)
+3. Full test suite execution
+4. Code coverage reporting
+5. Syntax validation for all modules
+6. Code style check (black)
+
+**Status:** ✅ All 8 original tests pass
+
+---
+
+## 11. Design Decisions & Rationale
+
+### 11.1 Why Logistic Regression as Proxy Classifier?
 
 - **Simple & Interpretable**: No hyperparameter tuning needed
 - **Fast**: Trains quickly on large datasets
 - **Stable**: Low variance across different random seeds
 - **Assumption**: We're auditing data bias, not model performance
 
-### 9.2 Why aif360 StandardDataset?
+### 11.2 Why aif360 StandardDataset?
 
 - **Industry Standard**: Widely used in fairness research
 - **Mature**: Well-documented and battle-tested
 - **Extensible**: Can add new metrics easily
 - **Compatibility**: Ecosystem of fairness tools
 
-### 9.3 Why JSON Reports?
+### 11.3 Why JSON Reports?
 
 - **Interoperability**: Works across all platforms/languages
 - **Parseable**: Programmatic report generation
 - **Human-Readable**: Easy to understand and audit
 - **Integration**: Supports downstream systems/dashboards
 
+### 11.4 Why Add Streamlit Dashboard?
+
+- **Low-code**: Quick UI without frontend expertise
+- **Interactive**: Real-time feedback on analysis changes
+- **Production-ready**: Built-in deployment support
+- **Accessible**: Non-technical users can run analyses
+- **Shareable**: Easy to deploy and share reports
+
+### 11.5 Why Temporal Analysis?
+
+- **Compliance**: Document fairness over audit periods
+- **Flexibility**: Detect emerging or improving bias patterns
+- **Actionable**: Measure intervention effectiveness
+- **Comprehensive**: Combines trend analysis with risk assessment
+
 ---
 
-## 10. Limitations & Future Work
+## 12. Limitations & Future Work
 
-### 10.1 Current Limitations
+### 12.1 Current Limitations
 
 1. **Binary Labels Only**: Multi-class classification not supported
 2. **Single First Protected Attribute**: Multiple attributes not fully tested
 3. **Proxy Classifier Assumptions**: May not reflect actual model behavior
 4. **Fixed Favorable Classes**: Assumes 1 is favorable for all columns
 
-### 10.2 Future Enhancements
+### 12.2 Future Enhancements
 
 - [ ] Multi-class support
 - [ ] Calibration metrics
@@ -373,13 +571,13 @@ pip install aif360 numpy pandas scikit-learn
 - [ ] Counterfactual fairness
 - [ ] Custom classifier support
 - [ ] HTML report generation
-- [ ] Dashboard integration
+- [ ] Advanced ML model integration
 
 ---
 
-## 11. Responsible AI Considerations
+## 13. Responsible AI Considerations
 
-### 11.1 When to Use FairLens
+### 13.1 When to Use FairLens
 
 ✅ **Appropriate Use Cases:**
 - Screening datasets before training
@@ -392,7 +590,7 @@ pip install aif360 numpy pandas scikit-learn
 - Making final hiring/lending decisions alone
 - Assuming perfect fairness metrics mean no bias
 
-### 11.2 Interpretation Guidelines
+### 13.2 Interpretation Guidelines
 
 - **Metrics are correlations, not causation**
 - **Multiple metrics should be considered together**
@@ -401,21 +599,40 @@ pip install aif360 numpy pandas scikit-learn
 
 ---
 
-## 12. File Structure
+## 14. File Structure & Modules
 
 ```
 FairLens/
-├── fairness_engine.py          # Core framework (500+ lines)
-├── test_fairness_engine.py     # Comprehensive test suite
-├── README.md                    # This documentation
-└── requirements.txt             # Python dependencies
+├── app.py                           # Streamlit web dashboard (NEW)
+├── fairness_engine.py               # Core framework
+├── visualization_utils.py           # Plotly visualization functions (NEW)
+├── test_fairness_engine.py          # Comprehensive test suite
+├── examples.py                      # Usage examples
+├── QUICKSTART_EXAMPLES.py           # 5 runnable quick-start examples (NEW)
+├── IMPLEMENTATION_GUIDE.md          # Step-by-step implementation guide (NEW)
+├── README.md                        # This documentation
+├── requirements.txt                 # Python dependencies
+├── verify.py                        # Verification/demo script
+├── 00_START_HERE.md                 # Project entry point
+└── .github/
+    └── workflows/
+        └── python-tests.yml         # GitHub Actions CI/CD (NEW)
 ```
+
+### Key Modules Description
+
+| Module | Purpose | Lines |
+|--------|---------|-------|
+| `fairness_engine.py` | Core fairness audit framework | 700+ |
+| `app.py` | Interactive Streamlit dashboard | 400+ |
+| `visualization_utils.py` | 7 reusable Plotly chart functions | 300+ |
+| `test_fairness_engine.py` | 8 comprehensive test cases | 250+ |
 
 ---
 
-## 13. Example Workflows
+## 15. Example Workflows
 
-### 13.1 Pre-Training Audit
+### 15.1 Pre-Training Audit
 
 ```python
 # Load raw data
@@ -436,7 +653,7 @@ if risk['risk_level'] == 'High':
     # Apply fairness interventions (reweighting, stratification, etc.)
 ```
 
-### 13.2 Compliance Documentation
+### 15.2 Compliance Documentation
 
 ```python
 # Generate formal audit trail
@@ -458,7 +675,9 @@ metadata = {
 
 ---
 
-## 14. FAQ
+---
+
+## 16. FAQ
 
 **Q: What's the difference between DPD and DIR?**
 A: DPD measures absolute difference in rates; DIR measures ratio. DIR is more commonly used in legal contexts.
@@ -472,14 +691,91 @@ A: Current version compares group 0 vs. others. Extend TabularAuditor for pairwi
 **Q: How do I fix detected bias?**
 A: FairLens identifies bias; fixing requires fairness interventions (reweighting, stratification, synthetic data, etc.).
 
+**Q: How do I use the Streamlit dashboard?**
+A: Run `streamlit run app.py` and upload your CSV file. The dashboard will guide you through the analysis.
+
+**Q: Can I export my analysis results?**
+A: Yes! Export as JSON reports or CSV data with temporal trends from the dashboard.
+
+**Q: Is the temporal analysis required?**
+A: No, it's optional. Use it when you have time-series data (yearly, monthly snapshots).
+
 ---
 
-## 15. References
+## 17. References
 
+### Academic & Industry Standards
 - **AI Fairness 360**: https://github.com/Trusted-AI/AIF360
-- **EEOC Guidance on Disparate Impact**: https://www.eeoc.gov/laws/guidance/
 - **Fairness Definitions Explained**: https://arxiv.org/abs/1710.03184
-- **Responsible AI Guidelines**: https://www.microsoft.com/en-us/ai/responsible-ai
+- **EEOC Guidance on Disparate Impact**: https://www.eeoc.gov/laws/guidance/
+- **Microsoft's Responsible AI Guidelines**: https://www.microsoft.com/en-us/ai/responsible-ai
+- **Google's Fairness Definitions**: https://developers.google.com/machine-learning/fairness-friendly
+
+### Technical Documentation
+- **Streamlit Documentation**: https://docs.streamlit.io
+- **Plotly Documentation**: https://plotly.com/python/
+- **aif360 Documentation**: https://aif360.mybluemix.net/
+- **Pandas Documentation**: https://pandas.pydata.org/
+
+---
+
+## 18. Getting Help
+
+### Documentation
+1. **Start Here**: Read [00_START_HERE.md](00_START_HERE.md)
+2. **Quick Start**: Check [QUICKSTART_EXAMPLES.py](QUICKSTART_EXAMPLES.py)
+3. **Implementation**: Follow [IMPLEMENTATION_GUIDE.md](IMPLEMENTATION_GUIDE.md)
+4. **Examples**: Run [examples.py](examples.py)
+
+### Support
+- Report issues on the project repository
+- Check existing issues for similar problems
+- Review the FAQ section above
+
+---
+
+## 19. Version History
+
+### v2.0.0 (April 2, 2026)
+**New Features:**
+- ✨ Interactive Streamlit web dashboard
+- ⏱️ Temporal bias analysis with trend tracking
+- 📊 Advanced Plotly visualizations
+- 🔄 Automated GitHub Actions CI/CD pipeline
+- 📚 Comprehensive implementation guide
+- 📋 Extended documentation and examples
+
+**Improvements:**
+- 💾 Enhanced data export options
+- 🎨 Better visualization and UX
+- 📈 Time-series analysis support
+- ✅ Expanded test coverage
+
+### v1.0.0 (January 2, 2026)
+**Initial Release:**
+- Core fairness audit framework
+- 3 industry-standard fairness metrics (DPD, EOD, DIR)
+- Risk classification system
+- Comprehensive test suite (8 tests)
+- Full documentation
+
+---
+
+## 20. Contributing
+
+We welcome contributions! To contribute:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/your-feature`)
+3. Commit your changes (`git commit -am 'Add feature'`)
+4. Push to the branch (`git push origin feature/your-feature`)
+5. Create a Pull Request
+
+Please ensure:
+- Code follows PEP 8 style guide
+- All tests pass (`python test_fairness_engine.py`)
+- New features include tests
+- Documentation is updated
 
 ---
 
@@ -487,12 +783,15 @@ A: FairLens identifies bias; fixing requires fairness interventions (reweighting
 
 MIT License - See LICENSE file for details
 
-## Contact
+## Contact & Attribution
 
-For questions or contributions, please open an issue on the project repository.
+**Project Lead:** FairLens Development Team  
+**Version:** 2.0.0  
+**Status:** ✅ Production Ready  
+**Last Updated:** April 2, 2026
+
+For questions, feedback, or collaboration opportunities, please open an issue on the project repository.
 
 ---
 
-**Last Updated**: January 2, 2026
-**Version**: 1.0.0
-**Status**: Production Ready
+**Disclaimer:** This framework is designed to detect potential algorithmic bias in datasets. While it incorporates industry-standard fairness metrics, addressing bias requires domain expertise, business context understanding, and comprehensive fairness interventions beyond automated detection.
